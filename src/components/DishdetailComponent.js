@@ -1,12 +1,12 @@
 import React from 'react';
-import {Card, CardImg, CardText,CardBody,CardTitle} from 'reactstrap';
+import {Card, CardImg, CardText,CardBody,CardTitle, BreadcrumbItem,Breadcrumb} from 'reactstrap';
+import {Link} from 'react-router-dom';
 
 
 
     function RenderDish({dish}){
-        if(dish!=null){
             
-            const commentlist= dish.comments.map((comm)=>{
+            const commentlist= dish.map((comm)=>{
                 return(
                     <ul className="list-unstyled" key={comm.id}>
                         <li className="justify-content-between">
@@ -26,17 +26,12 @@ import {Card, CardImg, CardText,CardBody,CardTitle} from 'reactstrap';
                 </div>
                 
             );
-        }
-        else{
-            console.log('in else');
-            return(
-                <div></div>
-            );
-        }
+        
+        
     }
 
     function RenderMenu({dish}){
-        if(dish !=null){
+       
             return(
                 <div className="col-sm col-md-5 m-1">
                 <Card >
@@ -47,13 +42,7 @@ import {Card, CardImg, CardText,CardBody,CardTitle} from 'reactstrap';
                     </CardBody>
                 </Card>
                 </div>  
-            );
-        }
-        else{
-            return(
-                <div></div>
-            );
-        }
+            );  
     }
 
     function ReturnDate({date}){
@@ -65,16 +54,31 @@ import {Card, CardImg, CardText,CardBody,CardTitle} from 'reactstrap';
     }
 
     const DishDetail = (props) =>{
-     
+     if(props.dish!=null){
         
         return(
             <div className="container">
+                <div className="row">
+                <Breadcrumb>
+                    <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+                    <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                </Breadcrumb>
+                <div className="col-12">
+                    <h3>{props.dish.name}</h3>
+                </div>
+            </div>
             <div className="row">
                 <RenderMenu dish={props.dish} />
-                <RenderDish dish={props.dish} />
+                <RenderDish dish={props.comments} />
             </div>
             </div>
         );
+     }
+     else{
+         return(
+            <div></div>
+         );
+     }
     }
 
 
