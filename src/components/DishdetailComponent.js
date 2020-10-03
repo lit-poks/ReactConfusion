@@ -2,97 +2,98 @@ import React, { useState, Component } from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, BreadcrumbItem, Breadcrumb, Button, Modal, ModalHeader, ModalBody, Row, Col, Label, Container } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
-import {Loading} from './LoadingComponent';
-import {baseUrl} from '../shared/baseUrl';
+import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 
-    const required = (val) => val && val.length;
-    const maxLength = (len) => (val) => !(val) || (val.length <= len);
-    const minLength = (len) => (val) => (val) && (val.length >= len);
+const required = (val) => val && val.length;
+const maxLength = (len) => (val) => !(val) || (val.length <= len);
+const minLength = (len) => (val) => (val) && (val.length >= len);
 
-class CommentForm extends Component{
-    constructor(props){
+class CommentForm extends Component {
+    constructor(props) {
         super(props);
 
-        this.state={
+        this.state = {
             isModalOpen: false,
         }
 
-        this.handleSubmit=this.handleSubmit.bind(this);
-        this.toggle=this.toggle.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.toggle = this.toggle.bind(this);
     }
 
-    toggle(){
+    toggle() {
         this.setState({
-            isModalOpen:!this.state.isModalOpen
+            isModalOpen: !this.state.isModalOpen
         })
     }
 
-    handleSubmit(values){
+    handleSubmit(values) {
         this.toggle()
-        this.props.postComment(this.props.dishId,values.rating, values.author,values.comment)
+        this.props.postComment(this.props.dishId, values.rating, values.author, values.comment)
     };
 
 
-    render(){
+    render() {
         return (
             <>
-            <Button outline color="secondary" onClick={this.toggle}><span className="fa fa-pencil"></span> Submit Comment</Button>
-            <Modal isOpen={this.state.isModalOpen} toggle={this.toggle}>
-                <ModalHeader toggle={this.toggle}>Submit Comment</ModalHeader>
+                <Button outline color="secondary" onClick={this.toggle}><span className="fa fa-pencil"></span> Submit Comment</Button>
+                <Modal isOpen={this.state.isModalOpen} toggle={this.toggle}>
+                    <ModalHeader toggle={this.toggle}>Submit Comment</ModalHeader>
 
-                <ModalBody>
-                    <Container>
-                        <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
-                            <Row className="form-group">
-                                <Label htmlFor="rating">
-                                    Rating
+                    <ModalBody>
+                        <Container>
+                            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                                <Row className="form-group">
+                                    <Label htmlFor="rating">
+                                        Rating
                                         </Label>
-                                <Control.select model=".rating" name="rating" id="rating"
-                                    className="form-control">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </Control.select>
-                            </Row>
-                            <Row className="form-group">
-                                <Label htmlFor="author"> Your Name</Label>
-                                <Control.text model=".author" name="author"
-                                    className="form-control"
-                                    placeholder="Your Name"
-                                    validators={{
-                                        required, minLength: minLength(3), maxLength: maxLength(15)
-                                    }}
-                                />
-                                <Errors
-                                    className="text-danger"
-                                    model=".fullName"
-                                    show="touched"
-                                    messages={{
-                                        required: 'Required',
-                                        minLength: 'Must be greater than 2 characters',
-                                        maxLength: 'Must be 15 characters or less'
-                                    }}
-                                />
-                            </Row>
-                            <Row className="form-group">
-                                <Label>Comment</Label>
-                                <Control.textarea model=".comment" name="comment"
-                                    className="form-control"
-                                    rows="6"
-                                />
-                            </Row>
-                            <Row className="form-group">
-                                <Button type="submit" color="primary" className="mt-2">
-                                    Submit
+                                    <Control.select model=".rating" name="rating" id="rating"
+                                        className="form-control">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </Control.select>
+                                </Row>
+                                <Row className="form-group">
+                                    <Label htmlFor="author"> Your Name</Label>
+                                    <Control.text model=".author" name="author"
+                                        className="form-control"
+                                        placeholder="Your Name"
+                                        validators={{
+                                            required, minLength: minLength(3), maxLength: maxLength(15)
+                                        }}
+                                    />
+                                    <Errors
+                                        className="text-danger"
+                                        model=".fullName"
+                                        show="touched"
+                                        messages={{
+                                            required: 'Required',
+                                            minLength: 'Must be greater than 2 characters',
+                                            maxLength: 'Must be 15 characters or less'
+                                        }}
+                                    />
+                                </Row>
+                                <Row className="form-group">
+                                    <Label>Comment</Label>
+                                    <Control.textarea model=".comment" name="comment"
+                                        className="form-control"
+                                        rows="6"
+                                    />
+                                </Row>
+                                <Row className="form-group">
+                                    <Button type="submit" color="primary" className="mt-2">
+                                        Submit
                                         </Button>
-                            </Row>
-                        </LocalForm>
-                    </Container>
-                </ModalBody>
-            </Modal>
+                                </Row>
+                            </LocalForm>
+                        </Container>
+                    </ModalBody>
+                </Modal>
             </>
         );
     }
@@ -101,17 +102,21 @@ class CommentForm extends Component{
 };
 
 
-function RenderDish({ dish, postComment,dishId}) {
+function RenderDish({ dish, postComment, dishId }) {
 
     const commentlist = dish.map((comm) => {
         return (
             <ul className="list-unstyled" key={comm.id}>
-                <li className="justify-content-between">
-                    {comm.comment}
-                </li>
-                <li className="justify-content-between">
-                    --{comm.author}, <ReturnDate date={comm.date} />
-                </li>
+                <Stagger in>
+                    <Fade in>
+                    <li className="justify-content-between">
+                        {comm.comment}
+                    </li>
+                    <li className="justify-content-between">
+                        --{comm.author}, <ReturnDate date={comm.date} />
+                    </li>
+                    </Fade>
+                </Stagger>
             </ul>
 
         );
@@ -120,7 +125,7 @@ function RenderDish({ dish, postComment,dishId}) {
         <div className="col-sm col-md-5 ml-1">
             <h4>Comments</h4>
             {commentlist}
-            <CommentForm dishId={dishId} postComment={postComment}/>
+            <CommentForm dishId={dishId} postComment={postComment} />
         </div>
 
     );
@@ -132,13 +137,18 @@ function RenderMenu({ dish }) {
 
     return (
         <div className="col-sm col-md-5 m-1">
-            <Card >
-                <CardImg top src={baseUrl + dish.image} alt={dish.name} />
-                <CardBody>
-                    <CardTitle>{dish.name}</CardTitle>
-                    <CardText>{dish.description}</CardText>
-                </CardBody>
-            </Card>
+            <FadeTransform in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
+                <Card >
+                    <CardImg top src={baseUrl + dish.image} alt={dish.name} />
+                    <CardBody>
+                        <CardTitle>{dish.name}</CardTitle>
+                        <CardText>{dish.description}</CardText>
+                    </CardBody>
+                </Card>
+            </FadeTransform>
         </div>
     );
 }
@@ -152,8 +162,8 @@ function ReturnDate({ date }) {
 }
 
 const DishDetail = (props) => {
-    if(props.isLoading){
-        return(
+    if (props.isLoading) {
+        return (
             <div className="container">
                 <div className="row">
                     <Loading />
@@ -161,8 +171,8 @@ const DishDetail = (props) => {
             </div>
         );
     }
-    else if(props.errMess){
-        return(
+    else if (props.errMess) {
+        return (
             <div className="container">
                 <div className="row">
                     <h4>{props.errMess}</h4>
@@ -186,8 +196,8 @@ const DishDetail = (props) => {
                 <div className="row">
                     <RenderMenu dish={props.dish} />
                     <RenderDish dish={props.comments}
-                    postComment={props.postComment}
-                    dishId={props.dish.id}
+                        postComment={props.postComment}
+                        dishId={props.dish.id}
                     />
                 </div>
             </div>
